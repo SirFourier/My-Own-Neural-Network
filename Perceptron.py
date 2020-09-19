@@ -11,84 +11,23 @@
 # For N inputs, f(x) becomes the sum of theta*f(x)
 # where theta = threshold function.
 
-# Using numpy for matrix maths and matplotlib for displaying data
+# Using numpy for matrix maths and scipy for activation function
 import numpy
-import matplotlib.pyplot as plt
 
 
 # Create a single Perceptron class
 class Perceptron:
-    def __init__(self, input_list, weights_list, bias):
-        # convert input and weights lists into numpy arrays
-        self.__inputs = numpy.array(input_list)
-        self.__weights = numpy.array(weights_list)
-        self.__bias = bias
-        self.__summed = 0
 
-    # perform dot product of inputs and weights
-    def __sum_dot(self):
-        self.__summed = numpy.dot(self.__inputs, self.__weights)
+    def __init__(self, weights, bias):
+        self.weights = weights
+        self.bias = bias
 
-    # add the bias
-    def __add_bias(self):
-        self.__summed += self.__bias
+    @classmethod
+    def set_activation_function(cls, function):
+        cls.activation_function = function
 
-    # calculate output
-    def calculate_output(self):
-        self.__sum_dot()
-        self.__add_bias()
-        output = 1 if self.__summed > 0 else 0
+    def calculate_output(self, inputs):
+        summed = numpy.dot(inputs, self.weights)
+        summed += self.bias
+        output = self.activation_function(summed)
         return output
-
-
-# display truth table of all possible boolean inputs
-def truth_table(weights, bias):
-    for i in range(2):
-        for j in range(2):
-            perceptron = Perceptron([i, j], weights, bias)
-            print(f"Inputs: {i, j} Result: {perceptron.calculate_output()}")
-
-    print()
-
-
-# Our main function
-def main():
-    # print truth able using the following weights as inputs
-    # weights = [1.0, 1.0] and bias = -1 generates an AND function
-    # weights = [1.0, 1.0] and bias =  0 generates an OR function
-    truth_table([1.0, 1.0], -1)
-
-    # make a plot in XKCD style
-    fig = plt.xkcd()
-
-    plt.scatter(0, 0, s=50, color="red", zorder=3)
-    plt.scatter(0, 1, s=50, color="red", zorder=3)
-    plt.scatter(1, 0, s=50, color="red", zorder=3)
-    plt.scatter(1, 1, s=50, color="green", zorder=3)
-
-    # weights and bias
-    w1 = 1.0
-    w2 = 1.0
-    b = -1
-
-    # plot line
-    x_data = numpy.arange(-2.0, 2.1, 0.1)
-    y_data = (-w1/w2)*x_data - b/w2
-    plt.plot(x_data, y_data)
-
-    plt.xlim(-2, 2)
-    plt.ylim(-2, 2)
-
-    plt.xlabel("Input 1")
-    plt.ylabel("Input 2")
-    plt.title("State Space of Input Vector")
-
-    plt.grid(True, linewidth=1, linestyle=':')
-
-    plt.tight_layout()
-
-    plt.show()
-
-
-if __name__ == "__main__":
-    main()

@@ -3,103 +3,141 @@
 # A Neural Network is an interconnected system of perceptrons
 # Using sigmoid activation function
 
-import numpy
+# Import numpy for optimised matrix maths
+import numpy as np
+
+# Import layer class
+from Layer import Layer
 
 
-# Create a Neural Network class
+# Create a Feed Forward Neural Network class
 class NeuralNetwork:
 
-    # specify number of input, hidden layers, hidden nodes, output nodes and activation function
-    def __init__(self, input_nodes, hidden_layers, hidden_nodes, output_nodes, activation_function):
-        self.i_nodes = input_nodes
-        self.h_nodes = hidden_nodes
-        self.o_nodes = output_nodes
-        self.h_layers = hidden_layers
-        self.a_function = numpy.vectorize(activation_function)
+    # specify number of input, hidden nodes, output nodes, and hidden layers
+    def __init__(self, input_nodes, hidden_nodes, output_nodes, hidden_layers):
+        # define layout (input layer + hidden layers + output layer)
+        layout = [input_nodes] + [hidden_nodes for _ in range(hidden_layers)] + [output_nodes]
 
-        # note each hidden layer will have the same number of hidden_nodes
+        # create list of layers based on number of nodes current layer and the previous layer
+        self.layers = [Layer(previous, current) for previous, current in zip(layout, layout[1:])]
 
-        # weights layer 1 = input layer        -> hidden layer 1
-        # weights layer 2 = hidden layer 1     -> hidden layer 2
-        # weights layer N = hidden layer (N-1) -> output layer
-        # therefore, number of weights layers = number of hidden layers + 1
+        # define derivative of activation function
+        self.act_prime = np.vectorize(lambda x: self.act(x) * (1 - self.act(x)))
 
-        # define weights layer list where each element stores the matrix of weights for that layer
-        self.w_layer_list = []
+        # define derivative of cost function
+        self.cost_prime = np.vectorize(lambda x, y: 2 * (x - y))
 
-        # define bias list for each weights layer
-        self.b_layer_list = []
+    # define activation function (sigmoid)
+    @staticmethod
+    def act(x):
+        return 1 / (1 + np.exp(-x))
 
-        # initialise our weights using a normal distribution of random numbers
-        # define weights matrix for input -> hidden layer 1
-        w_i_to_h1 = numpy.random.normal(0.0, pow(self.h_nodes, -0.5), (self.h_nodes, self.i_nodes))
-        b_i_to_h1 = [0 for _ in range(self.i_nodes)]
-        self.w_layer_list.append(w_i_to_h1)
-        self.b_layer_list.append(b_i_to_h1)
+    # define derivative of activation function
+    def act_prime(self, x):
+        return self.act(x) * (1 - self.act(x))
 
-        # number of weight layers not including first and last = number of hidden layers - 1
-        # define the rest of the weights layer except the last one
-        for _ in range(self.h_layers - 1):
-            w_h_to_h = numpy.random.normal(0.0, pow(self.h_nodes, -0.5), (self.h_nodes, self.h_nodes))
-            b_h_to_h = [0 for _ in range(self.i_nodes)]
-            self.w_layer_list.append(w_h_to_h)
-            self.b_layer_list.append(b_h_to_h)
+    # define cost function
+    @staticmethod
+    def cost_prime(target, prediction):
+        return 2 * (prediction - target)
 
-        # define weights matrix for hidden layer (N-1) -> output layer
-        w_hl_to_o = numpy.random.normal(0.0, pow(self.o_nodes, -0.5), (self.o_nodes, self.h_nodes))
-        b_hl_to_o = [0 for _ in range(self.h_nodes)]
-        self.w_layer_list.append(w_hl_to_o)
-        self.b_layer_list.append(b_hl_to_o)
+    # define threshold of output
+    @staticmethod
+    @np.vectorize
+    def threshold(x):
+        if x > 0.9:
+            return 1.0
+        elif x < 0.1:
+            return 0.0
+        else:
+            return 0
 
-    # calculate output nodes (also known as feed forwarding)
-    def feed_forward(self, inputs):
-        # convert inputs list into numpy array
-        input_layer = numpy.array(inputs)
+    # test
+    def test(self, inputs, targets, lr):
+        # Create random weights and biases for layer 1
+        W1 = np.random.normal(0.0, pow(2 / 2, -0.5), (3, 2))
+        b1 = np.full((3, 1), 0)
 
-        # calculate first hidden layer
-        first_hidden_layer = numpy.dot(self.w_layer_list[0], input_layer) + self.b_layer_list[0]
-        first_hidden_layer = self.a_function(first_hidden_layer)
-        previous_hidden_layer = first_hidden_layer
+        # Create random weights and biases for layer 2
+        W2 = np.random.normal(0.0, pow(2 / 3, -0.5), (3, 3))
+        b2 = np.full((3, 1), 0)
 
-        # calculate the rest of the hidden layers
-        for i in range(1, self.h_layers):
-            current_hidden_layer = numpy.dot(self.w_layer_list[i], previous_hidden_layer) + self.b_layer_list[i]
-            current_hidden_layer = self.a_function(current_hidden_layer)
-            previous_hidden_layer = current_hidden_layer
+        # Create random weights and biases for layer 3
+        W3 = np.random.normal(0.0, pow(2 / 3, -0.5), (2, 3))
+        b3 = np.full((2, 1), 0)
 
-        # calculate output layer
-        output_layer = numpy.dot(self.w_layer_list[-1], previous_hidden_layer) + self.b_layer_list[-1]
-        output_layer = self.a_function(output_layer)
+        for _ in range(1000):
+            for i in range(4):
+                # Convert inputs list into numpy array
+                A0 = np.array(inputs[i]).reshape(-1, 1)
 
-        return output_layer
+                # convert targets list into numpy array
+                Y = np.array(targets[i]).reshape(-1, 1)
 
-    # train the network using backpropagation
-    def train(self, loss_function):
-        pass
+                # Feed forward through each layer
+                Z1 = W1 @ A0 + b1
+                A1 = self.act(Z1)
 
+                Z2 = W2 @ A1 + b2
+                A2 = self.act(Z2)
 
-# a activation function
-def rectified_linear(x):
-    return 0 if x < 0 else 0
+                Z3 = W3 @ A2 + b3
+                A3 = self.act(Z3)
 
+                # calculate dJ_dW3
+                dJ_A3 = self.cost_prime(Y, A3)
+                dA3_dZ3 = self.act_prime(Z3)
+                dZ3_dW3 = A2.T
+                dJ_dW3 = (dJ_A3 * dA3_dZ3) @ dZ3_dW3
 
-# a loss function
-def sum_of_squares_error(predicted, target):
-    return sum((target - predicted) ** 2)
+                # calculate dJ_dW2
+                dJ_dA2 = W3.T @ (dJ_A3 * dA3_dZ3)
+                dA2_dZ2 = self.act_prime(Z2)
+                dZ_dW2 = A1.T
+                dJ_dW2 = (dJ_dA2 * dA2_dZ2) @ dZ_dW2
 
+                # calculate dJ_dW1
+                dJ_dA1 = W2.T @ (dJ_dA2 * dA2_dZ2)
+                dA1_dZ1 = self.act_prime(Z1)
+                dZ_dW1 = A0.T
+                dJ_dW1 = (dJ_dA1 * dA1_dZ1) @ dZ_dW1
 
-# main program
-def main():
-    input_nodes = 2
-    hidden_layers = 2
-    hidden_nodes = 2
-    output_nodes = 1
-    activation_function = rectified_linear
-    loss_function = sum_of_squares_error
+                # adjust all weights
+                W1 += lr * dJ_dW1
+                W2 += lr * dJ_dW2
+                W3 += lr * dJ_dW3
 
-    my_ANN = NeuralNetwork(input_nodes, hidden_layers, hidden_nodes, output_nodes, activation_function)
+        for i in range(4):
+            # Convert inputs list into numpy array
+            A0 = np.array(inputs[i]).reshape(-1, 1)
+
+            # Feed forward through each layer
+            Z1 = W1 @ A0 + b1
+            A1 = self.act(Z1)
+
+            Z2 = W2 @ A1 + b2
+            A2 = self.act(Z2)
+
+            Z3 = W3 @ A2 + b3
+            A3 = self.act(Z3)
+
+            print(self.threshold(A3.T))
 
 
 # if this script is the main script executed
 if __name__ == "__main__":
-    main()
+    # define Neural Network parameters
+    input_nodes = 2
+    hidden_nodes = 3
+    output_nodes = 2
+    hidden_layers = 1
+
+    # create Neural Network object
+    my_ANN = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, hidden_layers)
+
+    # train Network for an AND gate
+    inputs_list = [[0, 0], [0, 1], [1, 0], [1, 1]]
+    targets_list = [[1, 1], [1, 0], [0, 1], [0, 0]]
+    learning_rate = 0.5
+
+    my_ANN.test(inputs_list, targets_list, learning_rate)

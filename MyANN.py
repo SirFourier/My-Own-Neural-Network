@@ -90,53 +90,55 @@ class NeuralNetwork:
 
 
 if __name__ == "__main__":
-    # # load MNIST dataset
-    # mn_data = MNIST('./MNIST')
-    # mn_data.gz = True
-    # mn_images, mn_labels = mn_data.load_training()
-    #
-    # # normalise image data from 0-255 to 0.01 to 1
-    # images_array = (np.array(mn_images) / 255.0 * 0.99) + 0.01
-    #
-    # # convert labels into array of 10 elements with all zeros while the labeled element is replaced by 1
-    # labels_list = []
-    # for label in mn_labels:
-    #     empty = np.full(10, 0.01)
-    #     empty[label] = 0.99
-    #     labels_list.append(empty)
-    # labels_array = np.array(labels_list)
-    #
-    # # instantiate Neural Network
-    # my_ANN = NeuralNetwork(input_nodes=784, hidden_nodes=38, output_nodes=10, hidden_layers=2)
-    #
-    # # train network
-    # cost_data = my_ANN.train(images_array, labels_array, learn_rate=0.5, epochs=1)
-    # plt.plot(cost_data)
-    # plt.show()
-    #
-    # # test network
-    # mn_test_images, mn_test_labels = mn_data.load_testing()
-    # test_images_array = (np.array(mn_test_images) / 255.0 * 0.99) + 0.01
-    # test_labels_array = np.array(mn_test_labels)
-    #
-    # correct_labels = 0
-    # for index, test_image in enumerate(test_images_array):
-    #     guess = np.argmax(my_ANN.feed_forward(test_image))
-    #     if test_labels_array[index] == guess:
-    #         correct_labels += 1
-    # score = correct_labels / len(test_labels_array) * 100
-    # print(f"The network was {score}% correct on {len(test_labels_array)} test images!")
+    # load MNIST dataset
+    mn_data = MNIST('./MNIST')
+    mn_data.gz = True
+    mn_images, mn_labels = mn_data.load_training()
+
+    # normalise image data from 0-255 to 0.01 to 1
+    images_array = (np.array(mn_images) / 255.0 * 0.99) + 0.01
+
+    # convert labels into array of 10 elements with all zeros while the labeled element is replaced by 1
+    labels_list = []
+    for label in mn_labels:
+        empty = np.full(10, 0.01)
+        empty[label] = 0.99
+        labels_list.append(empty)
+    labels_array = np.array(labels_list)
 
     # instantiate Neural Network
-    my_ANN = NeuralNetwork(input_nodes=2, hidden_nodes=2, output_nodes=1, hidden_layers=1)
+    my_ANN = NeuralNetwork(input_nodes=784, hidden_nodes=38, output_nodes=10, hidden_layers=2)
 
-    inputs_array = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    targets_array = np.array([0, 0, 0, 1])
+    # train network
+    cost_data = my_ANN.train(images_array, labels_array, learn_rate=0.5, epochs=1)
 
-    cost_data = my_ANN.train(inputs_array, targets_array, learn_rate=1, epochs=500)
+    # test network
+    mn_test_images, mn_test_labels = mn_data.load_testing()
+    test_images_array = (np.array(mn_test_images) / 255.0 * 0.99) + 0.01
+    test_labels_array = np.array(mn_test_labels)
 
-    for inputs in inputs_array:
-        print(my_ANN.feed_forward(inputs))
+    correct_labels = 0
+    for index, test_image in enumerate(test_images_array):
+        guess = np.argmax(my_ANN.feed_forward(test_image))
+        if test_labels_array[index] == guess:
+            correct_labels += 1
+    score = correct_labels / len(test_labels_array) * 100
+    print(f"The network was {score}% correct on {len(test_labels_array)} test images!")
 
+    # plot cost data
     plt.plot(cost_data)
     plt.show()
+
+    # # instantiate Neural Network
+    # my_ANN = NeuralNetwork(input_nodes=2, hidden_nodes=2, output_nodes=1, hidden_layers=1)
+    #
+    # inputs_array = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    # targets_array = np.array([0, 0, 0, 1])
+    #
+    # cost_data = my_ANN.train(inputs_array, targets_array, learn_rate=0.5, epochs=5000)
+    #
+    # for inputs in inputs_array:
+    #     print(my_ANN.feed_forward(inputs))
+    #
+    # plt.plot(cost_data)
+    # plt.show()

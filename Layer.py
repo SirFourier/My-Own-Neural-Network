@@ -7,17 +7,17 @@ class Layer:
 
     # Specify number of nodes from the previous layer and the number of nodes in this layer
     def __init__(self, previous_nodes, nodes):
-        # initialise weights using He initialisation (2/previous nodes before)
+        # initialise weights with standard deviation of sqrt(nodes)
         self.weights = np.random.normal(0.0, pow(nodes, -0.5), (nodes, previous_nodes))
         self.dJ_dW = np.full((nodes, previous_nodes), 0.0)
 
-        # initialise biases using zeros (transpose into 2D (1D) column matrix)
-        self.biases = np.full(nodes, 0.0).reshape(-1, 1)
-        self.dJ_dB = np.full(nodes, 0.0).reshape(-1, 1)
+        # initialise biases using zeros
+        self.biases = np.full((nodes, 1), 0.0)
+        self.dJ_dB = np.full((nodes, 1), 0.0)
 
-        # create empty outputs (transpose into 2D (1D) column matrix)
-        self.outputs = np.full(nodes, 0.0).reshape(-1, 1)
-        self.act_outputs = np.full(nodes, 0.0).reshape(-1, 1)
+        # create empty outputs
+        self.outputs = np.full((nodes, 1), 0.0)
+        self.act_outputs = np.full((nodes, 1), 0.0)
 
     def calculate_act_outputs(self, act_inputs, act):
         # store outputs before activation function for backpropagation

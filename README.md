@@ -19,7 +19,7 @@ To train the network is to call upon the ``.train`` method:
   - ``epochs``= number of times to train the same training set
   
 To use the trained network is to call upon the ``.feed_forward`` method:
-  - ``prediction = my_ANN.feed_forward(test_inputs)``
-  - ``test_inputs`` must be a numpy array
+  - ``prediction = my_ANN.feed_forward(inputs)``
+  - ``inputs`` must be a numpy array
 
 ## The Maths involved

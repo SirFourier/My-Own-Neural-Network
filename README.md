@@ -1,5 +1,5 @@
 # My own Neural Network
-A Feed Forward Artificial Neural Network from first principles (using numpy) with variable number of hidden layers. This is tested on the MNIST dataset.
+A Feed Forward Artificial Neural Network using numpy with variable number of hidden layers. This is tested on the MNIST dataset.
 
 ## Install and run
 -  ``git clone https://github.com/SirFourier/My-Own-Neural-Network``

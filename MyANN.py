@@ -65,7 +65,7 @@ class NeuralNetwork:
                 self.layers[-1].dJ_dW = dJ_dZ @ self.layers[-2].act_outputs.T
                 self.layers[-1].dJ_dB = dJ_dZ
 
-                # backpropagate up to but not including first layer and calculate dJ_dW and dJ_dB
+                # backpropagate up to but not including first hidden layer and calculate dJ_dW and dJ_dB
                 for j in range(1, len(self.layers) - 1):
                     dJ_dZ = (self.layers[-j].weights.T @ dJ_dZ) * self.act_prime(self.layers[-j-1].outputs)
                     self.layers[-j-1].dJ_dW = dJ_dZ @ self.layers[-j-2].act_outputs.T
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     # inputs_array = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
     # targets_array = np.array([0, 1, 1, 0])
     #
-    # my_ANN.train(inputs_array, targets_array, learn_rate=0.1, epochs=10000)
+    # cost_data = my_ANN.train(inputs_array, targets_array, learn_rate=0.3, epochs=5000)
     #
     # for inputs in inputs_array:
     #     print(my_ANN.feed_forward(inputs))

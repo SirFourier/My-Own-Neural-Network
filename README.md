@@ -22,4 +22,19 @@ To use the trained network is to call upon the ``.feed_forward`` method:
   - ``prediction = my_ANN.feed_forward(inputs)``
   - ``inputs`` must be a numpy array
 
+## Tests
+The following are the parameters that have made the ANN achieve an accuracy of 92-93% on the 10,000 test images:
+  - input_nodes = 784
+  - hidden_nodes = 38
+  - output_nodes = 10
+  - hidden_layers = 2
+  - learn_rate = 0.1
+  - epochs = 1 (all 60,000 training images once)
+
 ## The Maths involved
+All the maths I've worked out can be found in the word document in the Maths folder or https://github.com/SirFourier/My-Own-Neural-Network/tree/master/Maths/NeuralNetworkEquations.docx
+
+Here are the screeenshots of that document:
+![Screenshot1](Resources/EquationScreenshot1.png?raw=true)
+![Screenshot1](Resources/EquationScreenshot2.png?raw=true)
+![Screenshot1](Resources/EquationScreenshot3.png?raw=true)

@@ -1,4 +1,4 @@
-# My own Neural Network
+# An Artificial Neural Network
 A Feed Forward Artificial Neural Network using numpy with variable number of hidden layers. This is tested on the MNIST dataset.
 
 ## Install and run

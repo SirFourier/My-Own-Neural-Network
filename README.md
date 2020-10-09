@@ -2,7 +2,7 @@
 A Feed Forward Artificial Neural Network using numpy with variable number of hidden layers. This is tested on the MNIST dataset.
 
 ## Install and run
--  ``git clone https://github.com/SirFourier/An-Neural-Network``
+-  ``git clone https://github.com/SirFourier/An-Artificial-Neural-Network``
 -  ``pip install -r requirements.txt``
 -  ``python MyANN.py``
 

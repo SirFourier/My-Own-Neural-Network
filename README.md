@@ -32,7 +32,7 @@ The following are the parameters that have made the ANN achieve an accuracy of 9
   - epochs = 1 (all 60,000 training images once)
 
 ## The Maths involved
-All the maths I've worked out can be found in the word document in the Maths folder or click the following: https://github.com/SirFourier/An-Artifcial-Neural-Network/tree/master/Maths/NeuralNetworkEquations.docx
+All the maths I've worked out can be found in the word document in the Maths folder or click the following: https://github.com/SirFourier/An-Artificial-Neural-Network/blob/master/Maths/NeuralNetworkEquations.docx
 
 Here are the screeenshots of that document:
 ![Screenshot1](Maths/EquationScreenshot1.png?raw=true)

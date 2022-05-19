@@ -2,7 +2,7 @@
 A Feed Forward Artificial Neural Network using numpy with variable number of hidden layers. This is tested on the MNIST dataset.
 
 ## Install and run
--  ``git clone https://github.com/SirFourier/An-Artificial-Neural-Network``
+-  ``git clone https://github.com/ryan-tabar/An-Artificial-Neural-Network``
 -  ``pip install -r requirements.txt``
 -  ``python MyANN.py``
 
@@ -32,7 +32,7 @@ The following are the parameters that have made the ANN achieve an accuracy of 9
   - epochs = 1 (all 60,000 training images once)
 
 ## The Maths involved
-All the maths I've worked out can be found in the word document in the Maths folder or click the following: https://github.com/SirFourier/An-Artificial-Neural-Network/blob/master/Maths/NeuralNetworkEquations.docx
+All the maths I've worked out can be found in the word document in the Maths folder or click the following: https://github.com/ryan-tabar/An-Artificial-Neural-Network/blob/master/Maths/NeuralNetworkEquations.docx
 
 Here are the screeenshots of that document:
 ![Screenshot1](Maths/EquationScreenshot1.png?raw=true)

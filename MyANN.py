@@ -2,7 +2,14 @@
 import numpy as np
 from Layer import Layer
 from mnist import MNIST
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
+# Create a client to the account
+client = gspread.service_account(filename='python-test-373814-38b06d0d6b4e.json')
+
+gsheet = client.open("ANN_Results")
+wsheet = gsheet.worksheet("Sheet1")
 
 # Create an artificial neural network
 class NeuralNetwork:
@@ -82,7 +89,7 @@ class NeuralNetwork:
                     layer.biases -= learn_rate * layer.dJ_dB
 
 
-if __name__ == "__main__":
+def handwritten_digits(input_nodes, hidden_nodes, output_nodes, hidden_layers, learn_rate, epochs):
     # ----------------------------------------Handwritten Digits----------------------------------------------- #
     # load MNIST dataset
     print("\nLoading MNIST dataset...")
@@ -107,17 +114,11 @@ if __name__ == "__main__":
     print("Labels Converted.\n")
 
     # instantiate Neural Network
-    input_nodes   = 784
-    hidden_nodes  = 10
-    output_nodes  = 10
-    hidden_layers = 2
     my_ANN = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, hidden_layers)
     print("ANN instiantiated with following parameters: ")
     print(f"Input Nodes: {input_nodes}\nHidden Nodes: {hidden_nodes}\nOutput Nodes: {output_nodes}\nHidden Layers: {hidden_layers}\n")
 
     # train network
-    learn_rate = 0.1
-    epochs = 1
     print(f"Training ANN with a learning rate of {learn_rate} and an epoch(s) of {epochs}...")
     my_ANN.train(images_array, labels_array, learn_rate=0.1, epochs=1)
     print("Training Complete.\n")
@@ -134,7 +135,12 @@ if __name__ == "__main__":
             correct_labels += 1
     n_tests = len(test_labels_array)
     score = correct_labels / n_tests * 100
-    print(f"The ANN was {score} % correct on {n_tests} test images!")
+    print(f"The ANN was {score} % correct on {n_tests} test images!\n")
+    
+    print("Sending data to google sheets...")
+    new_row = [input_nodes, hidden_nodes, output_nodes, hidden_layers, learn_rate, epochs, score]
+    wsheet.append_row(new_row)
+    print("Google Sheets updated.")
 
     # # -----------------------------------------XOR gate----------------------------------------------- #
     # # instantiate Neural Network

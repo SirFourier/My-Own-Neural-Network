@@ -85,28 +85,45 @@ class NeuralNetwork:
 if __name__ == "__main__":
     # ----------------------------------------Handwritten Digits----------------------------------------------- #
     # load MNIST dataset
+    print("\nLoading MNIST dataset...")
     mn_data = MNIST('./MNIST')
     mn_data.gz = True
     mn_images, mn_labels = mn_data.load_training()
+    print("MNIST dataset loaded.\n")
 
     # normalise image data from 0-255 to 0.01 to 1
+    print("Normalising Image Data...")
     images_array = (np.array(mn_images) / 255.0 * 0.99) + 0.01
+    print("Image Data Normalised.\n")
 
     # convert labels into array of 10 elements with all zeros while the labeled element is replaced by 1
+    print("Converting labels to zeroes and ones...")
     labels_list = []
     for label in mn_labels:
         empty = np.full(10, 0.01)
         empty[label] = 0.99
         labels_list.append(empty)
     labels_array = np.array(labels_list)
+    print("Labels Converted.\n")
 
     # instantiate Neural Network
-    my_ANN = NeuralNetwork(input_nodes=784, hidden_nodes=38, output_nodes=10, hidden_layers=2)
+    input_nodes   = 784
+    hidden_nodes  = 10
+    output_nodes  = 10
+    hidden_layers = 2
+    my_ANN = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, hidden_layers)
+    print("ANN instiantiated with following parameters: ")
+    print(f"Input Nodes: {input_nodes}\nHidden Nodes: {hidden_nodes}\nOutput Nodes: {output_nodes}\nHidden Layers: {hidden_layers}\n")
 
     # train network
+    learn_rate = 0.1
+    epochs = 1
+    print(f"Training ANN with a learning rate of {learn_rate} and an epoch(s) of {epochs}...")
     my_ANN.train(images_array, labels_array, learn_rate=0.1, epochs=1)
+    print("Training Complete.\n")
 
     # test network
+    print("Testing ANN...")
     mn_test_images, mn_test_labels = mn_data.load_testing()
     test_images_array = (np.array(mn_test_images) / 255.0 * 0.99) + 0.01
     test_labels_array = np.array(mn_test_labels)
@@ -117,7 +134,7 @@ if __name__ == "__main__":
             correct_labels += 1
     n_tests = len(test_labels_array)
     score = correct_labels / n_tests * 100
-    print(f"The network was {score} % correct on {n_tests} test images!")
+    print(f"The ANN was {score} % correct on {n_tests} test images!")
 
     # # -----------------------------------------XOR gate----------------------------------------------- #
     # # instantiate Neural Network

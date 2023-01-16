@@ -3,7 +3,6 @@ import numpy as np
 from Layer import Layer
 from mnist import MNIST
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
 # Create a client to the account
 client = gspread.service_account(filename='python-test-373814-38b06d0d6b4e.json')
